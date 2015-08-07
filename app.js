@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var net = require("net");
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -58,3 +59,17 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
+
+// Connect to brainwave server
+var client = net.connect({port: 13854},
+    function () { //'connect' listener
+        console.log('connected to server!');
+        client.write('{"enableRawOutput":false,"format":"Json"}\r');
+    });
+client.on('data', function (data) {
+    console.log(data.toString());
+    client.end();
+});
+client.on('end', function () {
+    console.log('disconnected from server');
+});
