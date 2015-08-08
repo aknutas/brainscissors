@@ -254,7 +254,7 @@ Game.draw = function () {
             rewardfunction(-1);
         }
         else if (result === 2) {
-            //rewardfunction(1);
+            rewardfunction(0);
         }
         setTimeout(function () {
             for (var i = 0; i < Game.entities.length; i++) {
