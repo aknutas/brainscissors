@@ -85,9 +85,10 @@ var client = net.connect({host: 'localhost', port: 13854},
     });
 client.on('data', function (data) {
     cleandata = S(data.toString()).trim().s;
-   // console.log(cleandata);
+    // console.log(cleandata);
     var jsonobject = JSON.parse(cleandata);
     console.log(jsonobject);
+    io.emit('eeg', {eeg: jsonobject});
 });
 client.on('end', function () {
     console.log('disconnected from server');

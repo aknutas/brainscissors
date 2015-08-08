@@ -6,6 +6,7 @@ var playerHistory = [];
 var context = null;
 var my_canvas = null;
 var socket = null;
+var eegdata = [0,0,0,0,0,0,0,0,0,0];
 
 $(document).ready(function() {
     init();
@@ -34,8 +35,29 @@ function initSocketIO() {
     socket.on('handshake', function(msg){
         console.log(msg.msg);
     });
+    socket.on('eeg', function(msg){
+        console.log("Got eeg " + msg.eeg);
+    });
 
     socket.emit('handshake', {msg: 'connected'});
+}
+
+function processEeg(eego){
+    if(eego.eegPower){
+        eegdata[0] = eego.eegPower.delta;
+        eegdata[1] = eego.eegPower.theta;
+        eegdata[2] = eego.eegPower.lowAlpha;
+        eegdata[3] = eego.eegPower.highAlpha;
+        eegdata[4] = eego.eegPower.lowBeta;
+        eegdata[5] = eego.eegPower.highBeta;
+        eegdata[6] = eego.eegPower.lowGamma;
+        eegdata[7] = eego.eegPower.highGamma;
+        eegdata[8] = eego.eSense.attention;
+        eegdata[9] = eego.eSense.meditation;
+        console.log("Parsed eeg: " + eegpower);
+    } else {
+        console.log("Invalid object");
+    }
 }
 
 function solveCompetition(hand1, hand2) {
