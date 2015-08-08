@@ -5,7 +5,7 @@ function getHand() {
 var playerHistory = [];
 var context = null;
 var my_canvas = null;
-
+var socket = null;
 
 $(document).ready(function() {
     init();
@@ -15,6 +15,8 @@ function init() {
     my_canvas = document.getElementById('my_canvas');
     context = my_canvas.getContext('2d');
 
+    //Init socket and game
+    initSocketIO();
     Game.init();
 
     //Start other elements
@@ -24,6 +26,17 @@ function init() {
 
 };
 
+function initSocketIO() {
+    // Init socket
+    socket = io('http://localhost:3500');
+
+    // Handlers
+    socket.on('handshake', function(msg){
+        console.log(msg.msg);
+    });
+
+    socket.emit('handshake', {msg: 'connected'});
+}
 
 function solveCompetition(hand1, hand2) {
 

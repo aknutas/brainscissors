@@ -5,10 +5,16 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var net = require('net');
+var http2 = require('http');
 
 var routes = require('./routes/index');
 
+//Start express
 var app = express();
+
+//Start Socket.IO
+sserver = http2.Server(app);
+var io = require('socket.io')(sserver);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -55,11 +61,22 @@ app.use(function(err, req, res, next) {
     });
 });
 
-
 module.exports = app;
 
-// Connect to brainwave server
+// Socket.IO
+io.on('connection', function(socket){
+    console.log('new client connected');
+    socket.on('handshake', function(msg){
+        console.log('Got Socket.IO handshake: ' + msg.msg);
+        io.emit('handshake', {msg: 'hi'});
+    });
+});
 
+sserver.listen(3500, function(){
+    console.log('Socket.IO server listening on *:3500');
+});
+
+// Connect to brainwave server
 var client = net.connect({port: 13854},
     function () { //'connect' listener
         console.log('connected to server!');
@@ -67,7 +84,6 @@ var client = net.connect({port: 13854},
     });
 client.on('data', function (data) {
     console.log(data.toString());
-    client.end();
 });
 client.on('end', function () {
     console.log('disconnected from server');
