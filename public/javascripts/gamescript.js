@@ -1,3 +1,68 @@
+function drawBarChart(context, data, startX, barWidth, chartHeight, markDataIncrementsIn) {
+  // Draw the x and y axes
+  context.lineWidth = "1.0";
+  var startY = 380;
+  drawLine(context, startX, startY, startX, 30); 
+  drawLine(context, startX, startY, 570, startY);           
+  context.lineWidth = "0.0";
+  var maxValue = 0;
+  for (var i=0; i < data.length; i++) {
+    // Extract the data
+    var values = data[i].split(",");
+    var name = values[0];
+    var height = parseInt(values[1]);
+    if (parseInt(height) > parseInt(maxValue)) maxValue = height;
+    
+    // Write the data to the chart
+    context.fillStyle = "#b90000";
+    drawRectangle(context,startX + (i * barWidth) + i,(chartHeight - height)-78,barWidth,height,true);
+    
+    // Add the column title to the x-axis
+    context.textAlign = "left";
+    context.fillStyle = "#000";
+    context.fillText(name, startX + (i * barWidth) + i, chartHeight -10, 200);     
+  }
+  // Add some data markers to the y-axis
+  var numMarkers = Math.ceil(maxValue / markDataIncrementsIn);
+  context.textAlign = "right";
+  context.fillStyle = "#000";
+  var markerValue = 0;
+  for (var i=0; i < numMarkers; i++) {      
+    context.fillText(markerValue, (startX - 5), (chartHeight - markerValue)-64, 50);
+    markerValue += markDataIncrementsIn;
+  }
+}
+
+
+
+// drawLine - draws a line on a canvas context from the start point to the end point 
+function drawLine(contextO, startx, starty, endx, endy) {
+  contextO.beginPath();
+  contextO.moveTo(startx, starty);
+  contextO.lineTo(endx, endy);
+  contextO.closePath();
+  contextO.stroke();
+}
+
+// drawRectangle - draws a rectangle on a canvas context using the dimensions specified
+function drawRectangle(contextO, x, y, w, h, fill) {            
+  contextO.beginPath();
+  contextO.rect(x, y, w, h);
+  contextO.closePath();
+  contextO.stroke();
+  if (fill) contextO.fill();
+}
+
+
+
+
+
+
+
+
+
+
+
 function getHand() {
     var retVal =  dostuff(cpuHistory.concat(playerHistory).concat(eegdata));
     cpuHistory.splice(0,0,(retVal+1)*100);
@@ -48,9 +113,10 @@ function initSocketIO() {
 
     socket.emit('handshake', {msg: 'connected'});
 }
-
+var bufferData = [];
 function processEeg(eego){
     if(eego.eegPower){
+
         eegdata[0] = eego.eegPower.delta / 1000;
         eegdata[1] = eego.eegPower.theta / 1000;
         eegdata[2] = eego.eegPower.lowAlpha / 1000;
@@ -61,10 +127,26 @@ function processEeg(eego){
         eegdata[7] = eego.eegPower.highGamma / 1000;
         eegdata[8] = eego.eSense.attention;
         eegdata[9] = eego.eSense.meditation;
+
+        bufferData[0] = "delta,"+eegdata[0].toString();
+        bufferData[1] =  "theta,"+eegdata[1].toString();;
+        bufferData[2] =  "lowAlpha,"+eegdata[2].toString();;
+        bufferData[3] =  "highAlpha,"+eegdata[3].toString();;
+        bufferData[4] = "lowBeta,"+ eegdata[4].toString();;
+
+        bufferData[5] =  "highBeta,"+eegdata[5].toString();;
+        bufferData[6] =  "lowGamma,"+eegdata[6].toString();;
+        bufferData[7] =  "highGamma,"+eegdata[7].toString();;
+        bufferData[8] =  "attention,"+eegdata[8].toString();;
+        bufferData[9] =  "meditation,"+eegdata[9].toString();;
         console.log("Parsed eeg: " + eegdata);
     } else {
         console.log("Invalid object");
     }
+
+
+
+
 }
 
 function solveCompetition(hand1, hand2) {
@@ -244,9 +326,11 @@ Game.draw = function () {
 
 
     if (!context)return;
+
     context.clearRect(0, 0, my_canvas.width, my_canvas.height);
     //this.context.drawImage(this.img,0,0);
-
+    // Draw the bar chart
+  drawBarChart(context, bufferData, 50, 100, (my_canvas.height - 20), 50);
     if (fightInvoked1) {
         fightInvoked1 = false;
         var img = null;
@@ -295,8 +379,8 @@ Game.draw = function () {
     }
 
 
-    context.font = 'italic 32pt Calibri';
-
+ 
+ 
     // context.fillText("VS", 80, 40);
 
 
