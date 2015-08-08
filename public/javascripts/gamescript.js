@@ -1,8 +1,14 @@
 function getHand() {
-    return dostuff(playerHistory, eegdata);
+    var retVal =  dostuff(playerHistory,cpuHistory, eegdata);
+    cpuHistory.splice(0,0,(retVal+1)*100);
+    checkHistory(cpuHistory);
+    console.log(cpuHistory);
+    return  retVal;
+   
 }
 
-var playerHistory = [];
+var playerHistory = [0,0,0];
+var cpuHistory = [0,0,0];
 var context = null;
 var my_canvas = null;
 var socket = null;
@@ -21,7 +27,7 @@ function init() {
     Game.init();
 
     //Start other elements
-    begin();
+   // begin();
 
     setInterval(Game.loop, 1000 / Game.frames);
 
@@ -45,14 +51,14 @@ function initSocketIO() {
 
 function processEeg(eego){
     if(eego.eegPower){
-        eegdata[0] = eego.eegPower.delta;
-        eegdata[1] = eego.eegPower.theta;
-        eegdata[2] = eego.eegPower.lowAlpha;
-        eegdata[3] = eego.eegPower.highAlpha;
-        eegdata[4] = eego.eegPower.lowBeta;
-        eegdata[5] = eego.eegPower.highBeta;
-        eegdata[6] = eego.eegPower.lowGamma;
-        eegdata[7] = eego.eegPower.highGamma;
+        eegdata[0] = eego.eegPower.delta / 1000;
+        eegdata[1] = eego.eegPower.theta / 1000;
+        eegdata[2] = eego.eegPower.lowAlpha / 1000;
+        eegdata[3] = eego.eegPower.highAlpha / 1000;
+        eegdata[4] = eego.eegPower.lowBeta / 1000;
+        eegdata[5] = eego.eegPower.highBeta / 1000;
+        eegdata[6] = eego.eegPower.lowGamma / 1000;
+        eegdata[7] = eego.eegPower.highGamma / 1000;
         eegdata[8] = eego.eSense.attention;
         eegdata[9] = eego.eSense.meditation;
         console.log("Parsed eeg: " + eegdata);
@@ -106,23 +112,23 @@ var hand1 = -1;
 
 //Global Button functions
 
-var checkHistory = function () {
-    if (playerHistory.length > 3) playerHistory.splice(2, playerHistory.length - 3);
+var checkHistory = function (val) {
+   val.splice(val.length-1, 1);
 }
 function scissors() {
 
 
-    playerHistory.unshift(0);
-    checkHistory();
-    $('.selectors').hide();
+    playerHistory.splice(0,0,100);
+    checkHistory(playerHistory);
+   
     Game.fight(0);
 
 }
 function rock() {
 
-    playerHistory.unshift(1);
-    checkHistory();
-    $('.selectors').hide();
+    playerHistory.splice(0,0,200);
+    checkHistory(playerHistory);
+    console.log(playerHistory);
     Game.fight(1);
 //Scissor Button is pressed {}
 
@@ -130,9 +136,9 @@ function rock() {
 }
 function paper() {
 
-    playerHistory.unshift(2);
-    checkHistory();
-    $('.selectors').hide();
+     playerHistory.splice(0,0,300);
+    checkHistory(playerHistory);
+  
     Game.fight(2);
 //Scissor Button is pressed {}
 
@@ -156,7 +162,7 @@ Game.fight = function (val) {
 
 
         result = solveCompetition(hand1, hand2);
-    }, 500);
+    }, 100);
     setTimeout(function () {
         var entL = Game.entities.length;
 
@@ -165,7 +171,7 @@ Game.fight = function (val) {
         }
 
 
-    }, 1500);
+    }, 200);
 };
 Game.resolveFight = function (val) {
     result = Game.solveCompetition(val, getHand());
@@ -285,11 +291,11 @@ Game.draw = function () {
 
 
             }
-            $('.selectors').show();
+           
             draw_net();
             draw_stats();
             brain.visSelf(document.getElementById("braininfo"));
-        }, 1500);
+        }, 300);
     }
 
 

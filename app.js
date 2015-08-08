@@ -86,10 +86,14 @@ var client = net.connect({host: 'localhost', port: 13854},
 client.on('data', function (data) {
     cleandata = S(data.toString()).trim().s;
     // console.log(cleandata);
-    var jsonobject = JSON.parse(cleandata);
-    console.log(jsonobject);
-    if(jsonobject.eegPower) 
-        io.emit('eeg', {eeg: jsonobject});
+    try {
+        var jsonobject = JSON.parse(cleandata);
+        console.log(jsonobject);
+        if(jsonobject.eegPower) 
+            io.emit('eeg', {eeg: jsonobject});
+    } catch(ex) {
+        console.log("Weird data from the socket, not transmitting");
+    }
 });
 client.on('end', function () {
     console.log('disconnected from server');
