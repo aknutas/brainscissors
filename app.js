@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var net = require('net');
 var http2 = require('http');
+var S = require('string');
 
 var routes = require('./routes/index');
 
@@ -76,14 +77,16 @@ sserver.listen(3500, function(){
     console.log('Socket.IO server listening on *:3500');
 });
 
-// Connect to brainwave server
-var client = net.connect({port: 13854},
+// Connect to brainwave server (set host to brainwave server address)
+var client = net.connect({host: 'localhost', port: 13854},
     function () { //'connect' listener
         console.log('connected to server!');
         client.write('{"enableRawOutput":false,"format":"Json"}\r');
     });
 client.on('data', function (data) {
-    console.log(data.toString());
+    cleandata = S(data.toString()).trim().s;
+    console.log(cleandata);
+    var jsonobject = JSON.parse(data);
 });
 client.on('end', function () {
     console.log('disconnected from server');
