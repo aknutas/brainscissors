@@ -40,6 +40,7 @@ function dostuff(inputArray) {
     // here, apply the action on environment and observe some reward. Finally, communicate it:
 
     // Return the action
+    
     return action;
 }
 

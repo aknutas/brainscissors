@@ -1,5 +1,7 @@
+
+
 function getHand(){
-	return Math.floor(Math.random()*3);
+	return dostuff(playerHistory);
 }
 
 var playerHistory = [];
@@ -21,33 +23,26 @@ setInterval(Game.loop, 1000 / Game.frames);
 
 };
 
-var Hand = function (hand) {
-  this.hand = hand;
-};
-
-Hand.prototype.getHand = function() {
-  return this.hand;
-}
 
 function solveCompetition(hand1, hand2){
 
 	if(hand1 === 0)
 	{
-		if(hand2 === 1)return hand2;	
-		else if(hand2 === 2)return hand1;
-		else{return -1;}
+		if(hand2 === 1)return 0;	
+		else if(hand2 === 2)return 1;
+		else{return 2;}
 	}
 	else if(hand1 === 1)
 	{
-		if(hand2 === 2)return hand2;	
-		else if(hand2 === 0)return hand1;
-		else{return -1;}
+		if(hand2 === 2)return 0;	
+		else if(hand2 === 0)return 1;
+		else{return 2;}
 	}
 	else if(hand1 === 2)
 	{
-		if(hand2 === 0)return hand2;	
-		else if(hand2 === 1)return hand1;
-		else{return -1;}
+		if(hand2 === 0)return 0;	
+		else if(hand2 === 1)return 1;
+		else{return 2;}
 	}
 };
 var Game = { };
@@ -68,10 +63,6 @@ Game.loop = function(){
 	Game.draw();
 };
 
-	
-Game.getLevel = function(){
-	return this.level;
-};
 var hand1 = -1;
 
 //Global Button functions
@@ -84,7 +75,7 @@ function scissors() {
 
 playerHistory.unshift(0);
 checkHistory();
-
+$('.selectors').hide();
 Game.fight(0);
 
 }
@@ -92,6 +83,7 @@ function rock(){
 
 playerHistory.unshift(1);
 checkHistory();
+$('.selectors').hide();
 Game.fight(1);
 //Scissor Button is pressed {}
 	
@@ -101,6 +93,7 @@ function paper(){
 
 playerHistory.unshift(2);
 checkHistory();
+$('.selectors').hide();
 Game.fight(2);
 //Scissor Button is pressed {}
 	
@@ -110,22 +103,29 @@ var result = -1;
 var resultInvoked = false;
 var fightInvoked1 = false;
 var fightInvoked2 = false;
-
+var resultInvoked1 = false;
+var resultInvoked2 = false;
 var hand1 = 0;
 var hand2 = getHand();
 Game.fight = function(val){
 	hand1 = val;
 	fightInvoked1 = true;
 
-	setTimeout(function(){ fightInvoked2 = true; hand2 = getHand();}, 1500);
+	setTimeout(function(){ 
+		fightInvoked2 = true; hand2 = getHand();
+
+
+		result = solveCompetition(hand1,hand2);
+	}, 500);
 	setTimeout(function(){
 		var entL = Game.entities.length;
 	
 		for (var i=0; i < Game.entities.length; i++) {
 		Game.entities[i].toggleRemove();
   	}
+  	
 	
-	}, 4500);
+	}, 1500);
 };
 Game.resolveFight = function(val){
 	result = Game.solveCompetition(val,getHand());
@@ -138,14 +138,16 @@ Game.update = function(){
   	}
   
 };
-var Hand = function(img,x_c,y_c){
+
+
+var Entity = function(img,x_c,y_c,name){
 	this.img = img;
 	this.x_c = x_c;
 	this.y_c = y_c;
 	this.alpha = 0.0;
 	this.remove = false;
 	this.create = true;
-
+	this.name = name ||"name";
 	this.toggleRemove = function(){
 		this.remove = true;
 	}
@@ -167,6 +169,10 @@ var Hand = function(img,x_c,y_c){
 			else{
 				Game.entities = [];
 				this.remove = false;
+				if(this.name === "name") {
+					resultInvoked2 = true;
+
+				}
 			}
 		}
 		else if(this.create){
@@ -191,20 +197,53 @@ Game.draw = function(){
 		fightInvoked1 = false;
 		var img = null;
 		img = new Image();
-		img.src = "1hand" + hand1.toString() + ".png";
-		this.entities.push(new Hand(img,my_canvas.width*0.15,my_canvas.height*0.5 - 128));
+		img.src = "2hand" + hand1.toString() + ".png";
+		this.entities.push(new Entity(img,my_canvas.width*0.15,my_canvas.height*0.5 - 128));
 		
 	}
 	if(fightInvoked2){
 		fightInvoked2 = false;
 		var img = null;
 		img = new Image();
-		img.src = "2hand" + hand2.toString() + ".png";
-		this.entities.push(new Hand(img,my_canvas.width*0.65,my_canvas.height*0.5 - 128));
+		img.src = "1hand" + hand2.toString() + ".png";
+		this.entities.push(new Entity(img,my_canvas.width*0.65,my_canvas.height*0.5 - 128));
 	}
+	if(resultInvoked1){
+		resultInvoked1 = false;
+		
+
+	}
+
+
 	var entL = this.entities.length;
 
+	if(entL === 0 && resultInvoked2){
+		resultInvoked2 = false;
+		var img = null;
+		img = new Image();
+		img.src = "result" + result.toString() + ".png";
+		this.entities.push(new Entity(img,my_canvas.width*0.5-128,my_canvas.height*0.5-128,"result"));
+		if(result===0){
+			 rewardfunction(1);
+		}
+		else if(result===1){
+			 rewardfunction(-1);
+		}
+		else if(result===2){
+			 //rewardfunction(1);
+		}
+  		setTimeout(function(){ 
+  		for (var i=0; i < Game.entities.length; i++) {
+		Game.entities[i].toggleRemove();
 
+
+  	}
+  	$('.selectors').show();
+	draw_net();
+    draw_stats();
+    brain.visSelf(document.getElementById("braininfo"));
+  }, 1500);
+	}
 
 
 	if(entL > 0){

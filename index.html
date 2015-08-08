@@ -1,16 +1,82 @@
-<html>
-<head>
 
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>ConvNetJS Deep Q Learning RPS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="public/javascripts/convnet-min.js"></script>
+    <script src="public/javascripts/util.js"></script>
+    <script src="public/javascripts/vis.js"></script>
+    <script src="public/javascripts/deepqlearn.js"></script>
+    <script src="public/javascripts/learner2.js"></script>
+    <script src="public/javascripts/testrps2.js"></script>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <style type="text/css">
+        canvas { border: 1px solid white; }
+    </style>
 
 </head>
-<body>
+<body onload="begin();">
+<div id="wrap">
+    <h2>ConvNetJS Deep Q RPS Learning Demo</h2>
+    <p>
+        Rock, paper & scissors reinforcement learning demo
+    </p>
 
+    <br/>
+
+    <strong>Neural Network Visualizations</strong> <br/>
+    <canvas id="vis_canvas" width="350" height="150"></canvas>
+    <canvas id="graph_canvas" width="350" height="150"></canvas><br />
+    <canvas id="net_canvas" width="700" height="200"></canvas><br />
+
+    <br/>
+
+    <strong>Game stats</strong> <br/>
+    <p id="actionstat"></p>
+
+    <br/>
+
+
+    <br/><br/>
+
+    <strong>Neural Network Stats</strong>
+    <div id="braininfo"></div>
+
+    <style>
+
+.pls 
+{
+    position:relative;
+    
+  
+ 
+}
+
+</style>
+
+ <script src="jquery.js"></script>
 
 
 <canvas id="myCanvas" width = "1280" height= "720"></canvas>
+
  <script src="script.js"></script>
-<button onclick="scissors()" type="button">Scissors</button>
-<button onclick="rock()" type="button">Rock</button>
-<button onclick="paper()" type="button">Paper</button>
+<link rel='stylesheet' href='/stylesheets/style.css' />
+
+  
+
+<div class="pls">
+<button class="selectors" onclick="scissors()" type="button"><img src="ButtonScissors.png"></img></button>
+<button class="selectors" onclick="rock()" type="button"><img src="ButtonRock.png"></img></button>
+<button class="selectors" onclick="paper()" type="button"><img src="ButtonPaper.png"></img></button>
+</div>
+
+
+</div>
 </body>
 </html>
