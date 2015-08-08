@@ -37,6 +37,7 @@ function initSocketIO() {
     });
     socket.on('eeg', function(msg){
         console.log("Got eeg " + msg.eeg);
+        processEeg(msg.eeg);
     });
 
     socket.emit('handshake', {msg: 'connected'});
@@ -54,7 +55,7 @@ function processEeg(eego){
         eegdata[7] = eego.eegPower.highGamma;
         eegdata[8] = eego.eSense.attention;
         eegdata[9] = eego.eSense.meditation;
-        console.log("Parsed eeg: " + eegpower);
+        console.log("Parsed eeg: " + eegdata);
     } else {
         console.log("Invalid object");
     }

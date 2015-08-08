@@ -88,7 +88,8 @@ client.on('data', function (data) {
     // console.log(cleandata);
     var jsonobject = JSON.parse(cleandata);
     console.log(jsonobject);
-    io.emit('eeg', {eeg: jsonobject});
+    if(jsonobject.eegPower) 
+        io.emit('eeg', {eeg: jsonobject});
 });
 client.on('end', function () {
     console.log('disconnected from server');
