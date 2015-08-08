@@ -59,7 +59,7 @@ app.use(function(err, req, res, next) {
 module.exports = app;
 
 // Connect to brainwave server
-/*
+
 var client = net.connect({port: 13854},
     function () { //'connect' listener
         console.log('connected to server!');
@@ -71,4 +71,7 @@ client.on('data', function (data) {
 });
 client.on('end', function () {
     console.log('disconnected from server');
-});*/
+});
+client.on('error', function(err) {
+    console.log('Mindwave server connection error:' + err);
+});

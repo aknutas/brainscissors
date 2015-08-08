@@ -11,4 +11,9 @@ router.get('/offlinetest', function(req, res, next) {
   res.render('offlinetest');
 });
 
+/* GET offlinetest2 */
+router.get('/offlinetest2', function(req, res, next) {
+  res.render('offlinetest2');
+});
+
 module.exports = router;
