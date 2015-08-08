@@ -1,5 +1,5 @@
 function getHand() {
-    return dostuff(playerHistory);
+    return dostuff(playerHistory, eegdata);
 }
 
 var playerHistory = [];
