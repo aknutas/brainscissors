@@ -242,16 +242,13 @@ var hand2 = getHand();
 Game.fight = function (val) {
     hand1 = val;
     fightInvoked1 = true;
-
-    setTimeout(function () {
-        fightInvoked2 = true;
+fightInvoked2 = true;
         hand2 = getHand();
    
 
         result = solveCompetition(hand1, hand2);
         resultInvoked2 = true;
-      
-    }, 100);
+   
    
 };
 Game.resolveFight = function (val) {
