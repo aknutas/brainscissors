@@ -1,6 +1,6 @@
-var num_inputs = 16;
+var num_inputs = 16; // input array with 16 values
 var num_actions = 3; // 3 possible outputs
-var temporal_window = 1; // amount of temporal memory. 0 = agent lives in-the-moment :)
+var temporal_window = 0; // amount of temporal memory. 0 = agent lives in-the-moment :)
 var network_size = num_inputs*temporal_window + num_actions*temporal_window + num_inputs;
 var iteration = 1;
 
@@ -10,7 +10,8 @@ var iteration = 1;
 // to just insert simple relu hidden layers.
 var layer_defs = [];
 layer_defs.push({type:'input', out_sx:1, out_sy:1, out_depth:network_size});
-layer_defs.push({type:'fc', num_neurons: 25, activation:'relu'});
+layer_defs.push({type:'fc', num_neurons: 14, activation:'relu'});
+layer_defs.push({type:'fc', num_neurons: 14, activation:'relu'});
 //layer_defs.push({type:'fc', num_neurons: 200, activation:'relu'}); // simpler neural network leans faster, disabled the layer
 layer_defs.push({type:'regression', num_neurons:num_actions});
 
@@ -24,7 +25,7 @@ opt.experience_size = 500;
 opt.start_learn_threshold = 5;
 opt.gamma = 0.7;
 opt.learning_steps_total = 1000;
-opt.learning_steps_burnin = 250;
+opt.learning_steps_burnin = 50;
 opt.epsilon_min = 0.05;
 opt.epsilon_test_time = 0.05;
 opt.layer_defs = layer_defs;
