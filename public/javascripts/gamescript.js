@@ -330,7 +330,9 @@ Game.draw = function () {
     context.clearRect(0, 0, my_canvas.width, my_canvas.height);
     //this.context.drawImage(this.img,0,0);
     // Draw the bar chart
+     context.globalAlpha = 0.25;
   drawBarChart(context, bufferData, 50, 100, (my_canvas.height - 20), 50);
+   context.globalAlpha = 1.0;
     if (fightInvoked1) {
         fightInvoked1 = false;
         var img = null;

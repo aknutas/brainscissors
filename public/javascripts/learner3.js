@@ -10,8 +10,8 @@ var iteration = 1;
 // to just insert simple relu hidden layers.
 var layer_defs = [];
 layer_defs.push({type:'input', out_sx:1, out_sy:1, out_depth:network_size});
-layer_defs.push({type:'fc', num_neurons: 200, activation:'relu'});
-layer_defs.push({type:'fc', num_neurons: 200, activation:'relu'});
+layer_defs.push({type:'fc', num_neurons: 25, activation:'relu'});
+//layer_defs.push({type:'fc', num_neurons: 200, activation:'relu'}); // simpler neural network leans faster, disabled the layer
 layer_defs.push({type:'regression', num_neurons:num_actions});
 
 // options for the Temporal Difference learner that trains the above net
@@ -20,11 +20,11 @@ var tdtrainer_options = {learning_rate:0.001, momentum:0.0, batch_size:64, l2_de
 
 var opt = {};
 opt.temporal_window = temporal_window;
-opt.experience_size = 1000;
-opt.start_learn_threshold = 4;
+opt.experience_size = 500;
+opt.start_learn_threshold = 5;
 opt.gamma = 0.7;
-opt.learning_steps_total = 200;
-opt.learning_steps_burnin = 50;
+opt.learning_steps_total = 1000;
+opt.learning_steps_burnin = 250;
 opt.epsilon_min = 0.05;
 opt.epsilon_test_time = 0.05;
 opt.layer_defs = layer_defs;
